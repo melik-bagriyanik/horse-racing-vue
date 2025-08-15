@@ -4,6 +4,7 @@ import TheWelcome from './components/TheWelcome.vue'
 import BaseButton from './components/atoms/BaseButton.vue'
 import Header from './components/organisms/Header.vue'
 import HorsesList from './components/organisms/HorsesList.vue'
+import Racefield from './components/organisms/Racefield.vue'
 </script>
 
 <template>
@@ -17,7 +18,13 @@ import HorsesList from './components/organisms/HorsesList.vue'
         { id: 3, name: 'Man o\' War', color: 'Brown', condition: 5 },
       ]"
     />
+    <Racefield></Racefield>
   </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+main {
+  display: flex;
+  justify-content: space-between;
+}
+</style>
