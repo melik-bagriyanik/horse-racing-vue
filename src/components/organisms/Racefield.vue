@@ -7,13 +7,13 @@
         <span class="race-distance">{{ distance }}m</span>
       </div>
     </div>
-
+    
     <div class="race-lanes">
-      <div
-        v-for="(lane, index) in displayLanes"
-        :key="index"
+      <div 
+        v-for="(lane, index) in displayLanes" 
+        :key="index" 
         class="race-lane"
-        :class="{ active: lane.isActive }"
+        :class="{ 'active': lane.isActive }"
       >
         <div class="lane-number">{{ index + 1 }}</div>
         <div class="lane-content">
@@ -96,7 +96,7 @@ export default {
     displayLanes() {
       return this.lanes.length > 0 ? this.lanes : this.defaultLanes
     },
-  },
+  }
 }
 </script>
 
@@ -223,35 +223,46 @@ export default {
   top: 0;
   bottom: 0;
   width: 4px;
-  background: repeating-linear-gradient(45deg, #fff, #fff 4px, transparent 4px, transparent 8px);
+  background: repeating-linear-gradient(
+    45deg,
+    #fff,
+    #fff 4px,
+    transparent 4px,
+    transparent 8px
+  );
   z-index: 1;
 }
 
+
+
 /* Responsive design */
+
 @media (max-width: 768px) {
   .racefield {
     padding: 15px;
   }
-
+  
   .racefield-header {
     flex-direction: column;
     gap: 10px;
     align-items: flex-start;
   }
-
+  
   .race-info {
     gap: 10px;
   }
-
+  
   .lane-number {
     width: 32px;
     height: 32px;
     font-size: 14px;
     margin-right: 10px;
   }
-
+  
   .horse-in-lane .horse-name {
     font-size: 10px;
   }
+  
+
 }
 </style>

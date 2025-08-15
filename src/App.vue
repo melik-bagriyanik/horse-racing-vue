@@ -4,6 +4,7 @@ import TheWelcome from './components/TheWelcome.vue'
 import BaseButton from './components/atoms/BaseButton.vue'
 import Header from './components/organisms/Header.vue'
 import HorsesList from './components/organisms/HorsesList.vue'
+import ProgramsAndResults from './components/organisms/ProgramsAndResults.vue'
 import Racefield from './components/organisms/Racefield.vue'
 </script>
 
@@ -19,6 +20,7 @@ import Racefield from './components/organisms/Racefield.vue'
       ]"
     />
     <Racefield></Racefield>
+    <ProgramsAndResults></ProgramsAndResults>
   </main>
 </template>
 
