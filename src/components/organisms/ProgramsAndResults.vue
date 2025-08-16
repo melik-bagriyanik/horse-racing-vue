@@ -1,27 +1,27 @@
 <template>
   <div class="programs-and-results">
-            <div class="program-panel">
-          <h3>Program</h3>
-          <div class="rounds-container">
-            <div v-for="round in rounds" :key="round.id" class="round-section">
-              <h4>{{ round.id }}ST Lap - {{ round.distance }}m</h4>
-              <table class="round-table">
-                <thead>
-                  <tr>
-                    <th>Position</th>
-                    <th>Name</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="position in 10" :key="position">
-                    <td>{{ position }}</td>
-                    <td>{{ getProgramHorseNameForPosition(position, round.id) }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+    <div class="program-panel">
+      <h3>Program</h3>
+      <div class="rounds-container">
+        <div v-for="round in rounds" :key="round.id" class="round-section">
+          <h4>{{ round.id }}ST Lap - {{ round.distance }}m</h4>
+          <table class="round-table">
+            <thead>
+              <tr>
+                <th>Position</th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="position in 10" :key="position">
+                <td>{{ position }}</td>
+                <td>{{ getProgramHorseNameForPosition(position, round.id) }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+      </div>
+    </div>
 
     <div class="results-panel">
       <h3>Results</h3>
@@ -61,12 +61,12 @@ const currentRound = computed(() => store.getters.currentRound)
 const getHorseNameForPosition = (position: number, roundId: number) => {
   const results = raceResults.value[roundId]
   console.log(`Results for round ${roundId}:`, results)
-  
+
   // If no results yet, show "No results"
   if (!results || results.length === 0) {
     return `No results yet`
   }
-  
+
   // Return the horse name at the specified position (1-based)
   // This should show the actual race results, not program order
   const horse = results[position - 1]
@@ -77,7 +77,7 @@ const getHorseNameForPosition = (position: number, roundId: number) => {
 const getProgramHorseNameForPosition = (position: number, roundId: number) => {
   const roundPrograms = store.state.roundPrograms
   const roundHorses = roundPrograms[roundId] || []
-  
+
   if (roundHorses.length > 0) {
     const index = position - 1 // Position 1 = index 0, Position 2 = index 1, etc.
     return roundHorses[index]?.name || `Horse ${position}`
@@ -91,19 +91,21 @@ const getProgramHorseNameForPosition = (position: number, roundId: number) => {
 .results-panel {
   position: relative;
   overflow: hidden;
+
+  background: rgb(46, 46, 46);
 }
 
 .program-panel h3,
 .results-panel h3 {
   position: sticky;
   top: 0;
-  background: rgb(218, 255, 95);
+  background: rgb(46, 46, 46);
   z-index: 10;
   padding: 15px 15px 15px 15px;
   margin: -15px -15px 15px -15px;
   border-radius: 8px 8px 0 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  color: black;
+  color: white;
   font-size: 18px;
   font-weight: bold;
   text-align: center;
@@ -112,15 +114,14 @@ const getProgramHorseNameForPosition = (position: number, roundId: number) => {
   display: flex;
   min-height: 650px;
   height: 90vh;
-
+  box-shadow: 0px 0px 18px 10px rgba(0, 0, 0, 0.1);
   overflow: auto;
-  width: 500px;
-  background-color: rgb(218, 255, 95);
+
+  background: rgba(93, 93, 93, 0.05);
 }
 
 .program-panel,
 .results-panel {
-  background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -137,15 +138,14 @@ const getProgramHorseNameForPosition = (position: number, roundId: number) => {
 }
 
 .round-section {
-  background: #ffec1d;
+  background: rgb(46, 46, 46);
   border-radius: 10px;
   border-radius: 6px;
   padding: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .round-section h4 {
-  color: black;
+  color: white;
   margin: 0 0 10px 0;
   font-size: 14px;
   font-weight: 600;
@@ -156,6 +156,9 @@ const getProgramHorseNameForPosition = (position: number, roundId: number) => {
   width: 100%;
   border-collapse: collapse;
   font-size: 12px;
+  padding: 10px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0px 7px 11px 8px rgba(255, 255, 255, 0.1);
 }
 
 .round-table th,

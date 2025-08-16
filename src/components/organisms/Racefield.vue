@@ -50,14 +50,14 @@ const currentRound = computed(() => store.getters.currentRound)
 const isRaceActive = computed(() => store.getters.isRaceActive)
 
 const currentRoundDistance = computed(() => {
-  const round = store.state.rounds.find(r => r.id === currentRound.value)
+  const round = store.state.rounds.find((r) => r.id === currentRound.value)
   return round ? round.distance : 1200
 })
 
 const displayLanes = computed(() => {
   const lanes = []
   for (let i = 1; i <= 10; i++) {
-    const horse = racingHorses.value.find(h => h.lane === i)
+    const horse = racingHorses.value.find((h) => h.lane === i)
     lanes.push({
       isActive: isRaceActive.value,
       horse: horse || null,
@@ -72,11 +72,10 @@ const displayLanes = computed(() => {
   background: linear-gradient(135deg, #2c5530 0%, #1a3d1e 100%);
   border-radius: 12px;
   padding: 20px;
-  margin: 20px 0;
+
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   flex: 1;
-  height: 87vh;
-  overflow: auto;
+  height: 100%;
 }
 
 .racefield-header {
