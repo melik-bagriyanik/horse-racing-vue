@@ -139,14 +139,15 @@ export default createStore({
       }
       
       commit('SET_RACING_HORSES', selectedHorses)
-      commit('SET_RACE_ACTIVE', true)
-      commit('SET_ROUND_ACTIVE', { roundId: 1, isActive: true })
+      // Don't set race as active - let user click Start button
+      commit('SET_RACE_ACTIVE', false)
     },
     
     startRace({ commit, state, dispatch }) {
       if (state.racingHorses.length === 0) return
       
       commit('SET_RACE_ACTIVE', true)
+      commit('SET_ROUND_ACTIVE', { roundId: 1, isActive: true })
       dispatch('runRound', state.currentRound)
     },
     
