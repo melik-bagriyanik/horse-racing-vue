@@ -9,12 +9,7 @@
     </div>
 
     <div class="race-lanes">
-      <div
-        v-for="(lane, index) in displayLanes"
-        :key="index"
-        class="race-lane"
-        :class="{ active: lane.isActive }"
-      >
+      <div v-for="(lane, index) in displayLanes" :key="index" class="race-lane">
         <div class="lane-number">{{ index + 1 }}</div>
         <div class="lane-content">
           <div v-if="lane.horse" class="horse-in-lane" :style="{ left: lane.horse.position + '%' }">
@@ -31,6 +26,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useStore } from 'vuex'
+import type { Horse } from '../../store'
+
+interface Lane {
+  isActive: boolean
+  horse: Horse | null
+}
 
 const store = useStore()
 
@@ -50,14 +51,14 @@ const currentRound = computed(() => store.getters.currentRound)
 const isRaceActive = computed(() => store.getters.isRaceActive)
 
 const currentRoundDistance = computed(() => {
-  const round = store.state.rounds.find((r) => r.id === currentRound.value)
+  const round = store.state.rounds.find((r: any) => r.id === currentRound.value)
   return round ? round.distance : 1200
 })
 
-const displayLanes = computed(() => {
-  const lanes = []
+const displayLanes = computed((): Lane[] => {
+  const lanes: Lane[] = []
   for (let i = 1; i <= 10; i++) {
-    const horse = racingHorses.value.find((h) => h.lane === i)
+    const horse = racingHorses.value.find((h: any) => h.lane === i)
     lanes.push({
       isActive: isRaceActive.value,
       horse: horse || null,

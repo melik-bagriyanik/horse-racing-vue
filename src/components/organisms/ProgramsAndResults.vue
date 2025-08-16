@@ -60,7 +60,6 @@ const currentRound = computed(() => store.getters.currentRound)
 
 const getHorseNameForPosition = (position: number, roundId: number) => {
   const results = raceResults.value[roundId]
-  console.log(`Results for round ${roundId}:`, results)
 
   // If no results yet, show "No results"
   if (!results || results.length === 0) {
@@ -70,7 +69,6 @@ const getHorseNameForPosition = (position: number, roundId: number) => {
   // Return the horse name at the specified position (1-based)
   // This should show the actual race results, not program order
   const horse = results[position - 1]
-  console.log(`Position ${position} in round ${roundId}:`, horse ? horse.name : 'No horse')
   return horse ? horse.name : `No result`
 }
 

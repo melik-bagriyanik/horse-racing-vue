@@ -2,18 +2,12 @@
   <div class="horse-item" :style="{ borderLeftColor: colorValue }">
     <span class="horse-name">{{ horse.name }}</span>
     <span class="horse-condition">{{ horse.condition }}</span>
-    <HorseColor :color="horse.color" />
   </div>
 </template>
 
 <script>
-import HorseColor from '../atoms/HorseColoredBall.vue'
-
 export default {
   name: 'HorseItem',
-  components: {
-    HorseColor,
-  },
   props: {
     horse: {
       type: Object,

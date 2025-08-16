@@ -1,4 +1,4 @@
-import { createStore } from 'vuex'
+import { createStore, Store } from 'vuex'
 
 export interface Horse {
   id: number
@@ -33,7 +33,7 @@ export interface State {
   isPaused: boolean // Track pause state
 }
 
-export default createStore({
+const store: Store<State> = createStore({
   state: (): State => ({
     horses: [],
     racingHorses: [],
@@ -112,14 +112,12 @@ export default createStore({
     },
     
     SET_ROUND_RESULTS(state, { roundId, results }: { roundId: number, results: Horse[] }) {
-      console.log(`Setting results for round ${roundId}:`, results.map((h, i) => `${i + 1}. ${h.name}: ${h.position.toFixed(2)}`))
       state.raceResults[roundId] = results
       const round = state.rounds.find(r => r.id === roundId)
       if (round) {
         round.results = results
         round.winner = results[0]
       }
-      console.log(`State raceResults after setting:`, state.raceResults)
     },
     
     SET_ROUND_ACTIVE(state, { roundId, isActive }: { roundId: number, isActive: boolean }) {
@@ -262,8 +260,6 @@ export default createStore({
               // Update results immediately when a horse finishes
               const currentResults = [...state.finishedHorses].sort((a, b) => a.finishPosition - b.finishPosition)
               commit('SET_ROUND_RESULTS', { roundId, results: currentResults })
-              
-              console.log(`${horse.name} finished in position ${horse.finishPosition}`)
             }
             
             if (horse.position < 100) {
@@ -275,10 +271,7 @@ export default createStore({
           }
         })
         
-        // Debug: Log positions when all finished
-        if (allFinished) {
-          console.log('Round finished. Final positions:', state.racingHorses.map(h => `${h.name}: ${h.position.toFixed(2)}`))
-        }
+
         
         // Check if all horses finished
         if (allFinished) {
@@ -287,22 +280,19 @@ export default createStore({
           
           // Sort horses by position (winner first - highest position wins)
           const sortedResults = [...state.racingHorses].sort((a, b) => b.position - a.position)
-          console.log('Round results:', sortedResults.map((h, i) => `${i + 1}. ${h.name}: ${h.position.toFixed(2)}`))
           
-          // Create a deep copy of the results to avoid reference issues
-          const resultsCopy = sortedResults.map(horse => ({
-            id: horse.id,
-            name: horse.name,
-            condition: horse.condition,
-            color: horse.color,
-            position: horse.position,
-            isRacing: horse.isRacing,
-            lane: horse.lane
-          }))
-          
-          console.log('Results copy to be saved:', resultsCopy.map((h, i) => `${i + 1}. ${h.name}: ${h.position.toFixed(2)}`))
-          
-          commit('SET_ROUND_RESULTS', { roundId, results: resultsCopy })
+                // Create a deep copy of the results to avoid reference issues
+      const resultsCopy = sortedResults.map(horse => ({
+        id: horse.id,
+        name: horse.name,
+        condition: horse.condition,
+        color: horse.color,
+        position: horse.position,
+        isRacing: horse.isRacing,
+        lane: horse.lane
+      }))
+      
+      commit('SET_ROUND_RESULTS', { roundId, results: resultsCopy })
           commit('SET_ROUND_ACTIVE', { roundId, isActive: false })
           
           // Move to next round or end race
@@ -354,10 +344,11 @@ export default createStore({
     currentRound: (state) => state.currentRound,
     roundResults: (state) => (roundId: number) => state.raceResults[roundId] || [],
     allRoundResults: (state) => {
-      console.log('allRoundResults getter called:', state.raceResults)
       // Return a copy to avoid reference issues
       return { ...state.raceResults }
     },
     activeRound: (state) => state.rounds.find(r => r.isActive),
   },
 })
+
+export default store
