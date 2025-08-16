@@ -3,8 +3,8 @@
     <div class="racefield-header">
       <h2>Race Field</h2>
       <div class="race-info">
-        <span class="race-number">Race #{{ raceNumber }}</span>
-        <span class="race-distance">{{ distance }}m</span>
+        <span class="race-number">Round #{{ currentRound }}</span>
+        <span class="race-distance">{{ currentRoundDistance }}m</span>
       </div>
     </div>
 
@@ -48,6 +48,11 @@ const props = defineProps({
 const racingHorses = computed(() => store.getters.racingHorses)
 const currentRound = computed(() => store.getters.currentRound)
 const isRaceActive = computed(() => store.getters.isRaceActive)
+
+const currentRoundDistance = computed(() => {
+  const round = store.state.rounds.find(r => r.id === currentRound.value)
+  return round ? round.distance : 1200
+})
 
 const displayLanes = computed(() => {
   const lanes = []

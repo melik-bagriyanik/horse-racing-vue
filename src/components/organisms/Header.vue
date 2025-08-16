@@ -9,9 +9,16 @@
       </nav>
       <nav>
         <BaseButton 
-          @click="generateProgram" 
+          @click="generateHorseList" 
           style="margin-right: 0.5rem"
           :disabled="isRaceActive"
+        >
+          Generate Horse List
+        </BaseButton>
+        <BaseButton 
+          @click="generateProgram" 
+          style="margin-right: 0.5rem"
+          :disabled="isRaceActive || horses.length === 0"
         >
           Generate Program
         </BaseButton>
@@ -34,8 +41,13 @@ import BaseButton from '../atoms/BaseButton.vue'
 
 const store = useStore()
 
+const horses = computed(() => store.state.horses)
 const racingHorses = computed(() => store.getters.racingHorses)
 const isRaceActive = computed(() => store.getters.isRaceActive)
+
+const generateHorseList = () => {
+  store.dispatch('generateHorseList')
+}
 
 const generateProgram = () => {
   store.dispatch('generateProgram')

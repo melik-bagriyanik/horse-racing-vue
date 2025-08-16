@@ -60,17 +60,27 @@ const currentRound = computed(() => store.getters.currentRound)
 
 const getHorseNameForPosition = (position: number, roundId: number) => {
   const results = raceResults.value[roundId]
-  if (results && results[position - 1]) {
-    return results[position - 1].name
+  console.log(`Results for round ${roundId}:`, results)
+  
+  // If no results yet, show "No results"
+  if (!results || results.length === 0) {
+    return `No results yet`
   }
-  return `Horse ${position}`
+  
+  // Return the horse name at the specified position (1-based)
+  // This should show the actual race results, not program order
+  const horse = results[position - 1]
+  console.log(`Position ${position} in round ${roundId}:`, horse ? horse.name : 'No horse')
+  return horse ? horse.name : `No result`
 }
 
 const getProgramHorseNameForPosition = (position: number, roundId: number) => {
-  const racingHorses = store.getters.racingHorses
-  if (racingHorses.length > 0) {
-    const index = (position + roundId - 1) % racingHorses.length
-    return racingHorses[index]?.name || `Horse ${position}`
+  const roundPrograms = store.state.roundPrograms
+  const roundHorses = roundPrograms[roundId] || []
+  
+  if (roundHorses.length > 0) {
+    const index = position - 1 // Position 1 = index 0, Position 2 = index 1, etc.
+    return roundHorses[index]?.name || `Horse ${position}`
   }
   return `Horse ${position}`
 }
