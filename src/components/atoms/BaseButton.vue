@@ -14,15 +14,23 @@ export default {
       validator: (value) =>
         ['primary', 'secondary', 'success', 'warning', 'danger'].includes(value),
     },
-    //buttonun pasif olması gereken durumlarda kullanmak için
     disabled: {
       type: Boolean,
       default: false,
     },
+    size: {
+      type: String,
+      default: 'medium',
+      validator: (value) => ['small', 'medium', 'large'].includes(value),
+    },
   },
   computed: {
     buttonClasses() {
-      return ['btn', `btn-${this.variant}`]
+      const classes = ['btn', `btn-${this.variant}`, `btn-${this.size}`]
+      if (this.disabled) {
+        classes.push('disabled')
+      }
+      return classes
     },
   },
   emits: ['click'],
@@ -48,6 +56,25 @@ export default {
   gap: 0.5rem;
   min-width: 120px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Size variants */
+.btn-small {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  min-width: 80px;
+}
+
+.btn-medium {
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  min-width: 120px;
+}
+
+.btn-large {
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  min-width: 160px;
 }
 
 .btn::before {
@@ -84,7 +111,15 @@ export default {
 .btn-primary:hover:not(:disabled) {
   background: linear-gradient(90deg, rgb(27, 115, 50) 0%, rgb(72, 162, 79) 50%);
   color: white;
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
 }
 
 .btn-success {
@@ -114,7 +149,8 @@ export default {
   background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
 }
 
-.btn:disabled {
+.btn:disabled,
+.btn.disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none !important;
@@ -123,7 +159,8 @@ export default {
   color: #9ca3af !important;
 }
 
-.btn:disabled::before {
+.btn:disabled::before,
+.btn.disabled::before {
   display: none;
 }
 </style>
