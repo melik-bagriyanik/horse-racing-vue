@@ -28,76 +28,38 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Racefield',
-  components: {},
-  props: {
-    raceNumber: {
-      type: Number,
-      default: 1,
-    },
-    distance: {
-      type: Number,
-      default: 1200,
-    },
-    lanes: {
-      type: Array,
-      default: () => [],
-    },
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+const store = useStore()
+
+const props = defineProps({
+  raceNumber: {
+    type: Number,
+    default: 1,
   },
-  data() {
-    return {
-      defaultLanes: [
-        {
-          isActive: true,
-          horse: { id: 1, name: 'Thunder Bolt', position: 20 },
-        },
-        {
-          isActive: true,
-          horse: { id: 2, name: 'Black Beauty', position: 15 },
-        },
-        {
-          isActive: true,
-          horse: { id: 3, name: 'Green Machine', position: 30 },
-        },
-        {
-          isActive: true,
-          horse: { id: 4, name: 'Orange Crush', position: 25 },
-        },
-        {
-          isActive: true,
-          horse: { id: 5, name: 'Brown Bear', position: 35 },
-        },
-        {
-          isActive: true,
-          horse: { id: 6, name: 'Cyan Storm', position: 40 },
-        },
-        {
-          isActive: true,
-          horse: { id: 7, name: 'Lime Lightning', position: 10 },
-        },
-        {
-          isActive: true,
-          horse: { id: 8, name: 'Teal Thunder', position: 5 },
-        },
-        {
-          isActive: true,
-          horse: { id: 9, name: 'Olive Oil', position: 0 },
-        },
-        {
-          isActive: true,
-          horse: { id: 10, name: 'Gold Rush', position: 12 },
-        },
-      ],
-    }
+  distance: {
+    type: Number,
+    default: 1200,
   },
-  computed: {
-    displayLanes() {
-      return this.lanes.length > 0 ? this.lanes : this.defaultLanes
-    },
-  },
-}
+})
+
+const racingHorses = computed(() => store.getters.racingHorses)
+const currentRound = computed(() => store.getters.currentRound)
+const isRaceActive = computed(() => store.getters.isRaceActive)
+
+const displayLanes = computed(() => {
+  const lanes = []
+  for (let i = 1; i <= 10; i++) {
+    const horse = racingHorses.value.find(h => h.lane === i)
+    lanes.push({
+      isActive: isRaceActive.value,
+      horse: horse || null,
+    })
+  }
+  return lanes
+})
 </script>
 
 <style scoped>

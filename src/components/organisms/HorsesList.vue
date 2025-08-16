@@ -7,21 +7,14 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 import HorseItem from '../molecules/HorseItem.vue'
 
-export default {
-  name: 'HorseList',
-  components: {
-    HorseItem,
-  },
-  props: {
-    horses: {
-      type: Array,
-      default: () => [],
-    },
-  },
-}
+const store = useStore()
+
+const horses = computed(() => store.state.horses)
 </script>
 
 <style scoped>

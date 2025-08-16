@@ -1,4 +1,3 @@
-<!-- src/components/organisms/Navbar.vue -->
 <template>
   <header class="navbar">
     <div class="container">
@@ -9,15 +8,46 @@
         <a href="#">Results</a>
       </nav>
       <nav>
-        <BaseButton style="margin-right: 0.5rem">Generate Program</BaseButton>
-        <BaseButton variant="secondary">Start/Pause</BaseButton>
+        <BaseButton 
+          @click="generateProgram" 
+          style="margin-right: 0.5rem"
+          :disabled="isRaceActive"
+        >
+          Generate Program
+        </BaseButton>
+        <BaseButton 
+          @click="toggleRace" 
+          variant="secondary"
+          :disabled="racingHorses.length === 0"
+        >
+          {{ isRaceActive ? 'Pause' : 'Start' }}
+        </BaseButton>
       </nav>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 import BaseButton from '../atoms/BaseButton.vue'
+
+const store = useStore()
+
+const racingHorses = computed(() => store.getters.racingHorses)
+const isRaceActive = computed(() => store.getters.isRaceActive)
+
+const generateProgram = () => {
+  store.dispatch('generateProgram')
+}
+
+const toggleRace = () => {
+  if (isRaceActive.value) {
+    store.dispatch('pauseRace')
+  } else {
+    store.dispatch('startRace')
+  }
+}
 </script>
 
 <style scoped>

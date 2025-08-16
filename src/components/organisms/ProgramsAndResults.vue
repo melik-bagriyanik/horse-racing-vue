@@ -1,27 +1,27 @@
 <template>
   <div class="programs-and-results">
-    <div class="program-panel">
-      <h3>Program</h3>
-      <div class="rounds-container">
-        <div v-for="round in rounds" :key="round.id" class="round-section">
-          <h4>{{ round.id }}ST Lap - {{ round.distance }}m</h4>
-          <table class="round-table">
-            <thead>
-              <tr>
-                <th>Position</th>
-                <th>Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="position in 10" :key="position">
-                <td>{{ position }}</td>
-                <td>{{ getHorseNameForPosition(position, round.id) }}</td>
-              </tr>
-            </tbody>
-          </table>
+            <div class="program-panel">
+          <h3>Program</h3>
+          <div class="rounds-container">
+            <div v-for="round in rounds" :key="round.id" class="round-section">
+              <h4>{{ round.id }}ST Lap - {{ round.distance }}m</h4>
+              <table class="round-table">
+                <thead>
+                  <tr>
+                    <th>Position</th>
+                    <th>Name</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="position in 10" :key="position">
+                    <td>{{ position }}</td>
+                    <td>{{ getProgramHorseNameForPosition(position, round.id) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
     <div class="results-panel">
       <h3>Results</h3>
@@ -48,44 +48,31 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ProgramsAndResults',
-  props: {
-    rounds: {
-      type: Array,
-      default: () => [
-        { id: 1, distance: 1200 },
-        { id: 2, distance: 1400 },
-        { id: 3, distance: 1600 },
-        { id: 4, distance: 1800 },
-        { id: 5, distance: 2000 },
-        { id: 6, distance: 2200 },
-      ],
-    },
-    horseNames: {
-      type: Array,
-      default: () => [
-        'Ada Lovelace',
-        'Grace Hopper',
-        'Margaret Hamilton',
-        'Joan Clarke',
-        'Katherine Johnson',
-        'Dorothy Vaughan',
-        'Mary Jackson',
-        'Annie Easley',
-        'Frances Spence',
-        'Betty Holberton',
-      ],
-    },
-  },
-  methods: {
-    getHorseNameForPosition(position, roundId) {
-      // Simple logic to assign horse names to positions
-      const index = (position + roundId - 1) % this.horseNames.length
-      return this.horseNames[index]
-    },
-  },
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+const store = useStore()
+
+const rounds = computed(() => store.state.rounds)
+const raceResults = computed(() => store.getters.allRoundResults)
+const currentRound = computed(() => store.getters.currentRound)
+
+const getHorseNameForPosition = (position: number, roundId: number) => {
+  const results = raceResults.value[roundId]
+  if (results && results[position - 1]) {
+    return results[position - 1].name
+  }
+  return `Horse ${position}`
+}
+
+const getProgramHorseNameForPosition = (position: number, roundId: number) => {
+  const racingHorses = store.getters.racingHorses
+  if (racingHorses.length > 0) {
+    const index = (position + roundId - 1) % racingHorses.length
+    return racingHorses[index]?.name || `Horse ${position}`
+  }
+  return `Horse ${position}`
 }
 </script>
 

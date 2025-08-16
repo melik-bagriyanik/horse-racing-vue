@@ -12,15 +12,9 @@ import Racefield from './components/organisms/Racefield.vue'
   <Header />
 
   <main>
-    <HorsesList
-      :horses="[
-        { id: 1, name: 'Seabiscuit', color: 'Red', condition: 12 },
-        { id: 2, name: 'Secretariat', color: 'Blue', condition: 8 },
-        { id: 3, name: 'Man o\' War', color: 'Brown', condition: 5 },
-      ]"
-    />
-    <Racefield></Racefield>
-    <ProgramsAndResults></ProgramsAndResults>
+    <HorsesList />
+    <Racefield />
+    <ProgramsAndResults />
   </main>
 </template>
 

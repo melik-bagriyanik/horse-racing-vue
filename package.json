@@ -19,7 +19,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "vue": "^3.5.18"
+    "vue": "^3.5.18",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",
