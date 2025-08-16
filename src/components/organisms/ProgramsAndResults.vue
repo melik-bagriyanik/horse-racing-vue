@@ -54,7 +54,7 @@ import { useStore } from 'vuex'
 
 const store = useStore()
 
-const rounds = computed(() => store.state.rounds)
+const rounds = computed(() => store.state.race.rounds)
 const raceResults = computed(() => store.getters.allRoundResults)
 const currentRound = computed(() => store.getters.currentRound)
 
@@ -73,7 +73,7 @@ const getHorseNameForPosition = (position: number, roundId: number) => {
 }
 
 const getProgramHorseNameForPosition = (position: number, roundId: number) => {
-  const roundPrograms = store.state.roundPrograms
+  const roundPrograms = store.state.race.roundPrograms
   const roundHorses = roundPrograms[roundId] || []
 
   if (roundHorses.length > 0) {

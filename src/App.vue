@@ -53,7 +53,7 @@ import Racefield from './components/organisms/Racefield.vue'
   box-shadow: 0px 0px 18px 10px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .race-section {
@@ -117,6 +117,7 @@ import Racefield from './components/organisms/Racefield.vue'
 
   .horses-section {
     grid-row: 1 / 2;
+    overflow-y: auto;
   }
 
   .race-section {

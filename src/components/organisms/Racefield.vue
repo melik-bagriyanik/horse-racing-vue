@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useStore } from 'vuex'
-import type { Horse } from '../../store'
+import type { Horse } from '../../store/types'
 
 interface Lane {
   isActive: boolean
@@ -51,7 +51,7 @@ const currentRound = computed(() => store.getters.currentRound)
 const isRaceActive = computed(() => store.getters.isRaceActive)
 
 const currentRoundDistance = computed(() => {
-  const round = store.state.rounds.find((r: any) => r.id === currentRound.value)
+  const round = store.state.race.rounds.find((r: any) => r.id === currentRound.value)
   return round ? round.distance : 1200
 })
 

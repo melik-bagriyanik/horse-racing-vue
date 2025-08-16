@@ -44,28 +44,28 @@ import BaseButton from '../atoms/BaseButton.vue'
 
 const store = useStore()
 
-const horses = computed(() => store.state.horses)
+const horses = computed(() => store.state.horses.horses)
 const racingHorses = computed(() => store.getters.racingHorses)
 const isRaceActive = computed(() => store.getters.isRaceActive)
 
 const generateHorseList = () => {
-  store.dispatch('generateHorseList')
+  store.dispatch('horses/generateHorseList')
 }
 
 const generateProgram = () => {
-  store.dispatch('generateProgram')
+  store.dispatch('race/generateProgram')
 }
 
 const toggleRace = () => {
   if (isRaceActive.value) {
-    store.dispatch('pauseRace')
+    store.dispatch('race/pauseRace')
   } else {
-    store.dispatch('startRace')
+    store.dispatch('race/startRace')
   }
 }
 
 const resetEverything = () => {
-  store.dispatch('resetRace')
+  store.dispatch('race/resetRace')
 }
 </script>
 

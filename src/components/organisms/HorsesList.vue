@@ -14,12 +14,13 @@ import HorseItem from '../molecules/HorseItem.vue'
 
 const store = useStore()
 
-const horses = computed(() => store.state.horses)
+const horses = computed(() => store.state.horses.horses)
 </script>
 
 <style scoped>
 .panel {
   width: 200px;
   padding: 20px;
+  overflow-y: auto;
 }
 </style>
