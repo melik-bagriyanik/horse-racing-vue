@@ -29,6 +29,8 @@ export interface State {
   currentRound: number
   isRaceActive: boolean
   raceResults: { [roundId: number]: Horse[] }
+  raceInterval?: number | null // Store the race interval ID
+  isPaused: boolean // Track pause state
 }
 
 export default createStore({
@@ -48,6 +50,8 @@ export default createStore({
     currentRound: 1,
     isRaceActive: false,
     raceResults: {},
+    raceInterval: null,
+    isPaused: false,
   }),
 
   mutations: {
@@ -130,8 +134,16 @@ export default createStore({
     },
     
     RESET_RACE(state) {
+      // Clear race interval if exists
+      if (state.raceInterval) {
+        clearInterval(state.raceInterval)
+        state.raceInterval = null
+      }
+      
       state.racingHorses = []
+      state.finishedHorses = []
       state.isRaceActive = false
+      state.isPaused = false
       state.currentRound = 1
       state.raceResults = {}
       state.roundPrograms = {}
@@ -144,6 +156,8 @@ export default createStore({
         horse.isRacing = false
         horse.position = 0
         horse.lane = undefined
+        horse.hasFinished = false
+        horse.finishPosition = undefined
       })
     },
   },
@@ -195,29 +209,40 @@ export default createStore({
     startRace({ commit, state, dispatch }) {
       if (state.racingHorses.length === 0) return
       
+      const wasPaused = state.isPaused
       commit('SET_RACE_ACTIVE', true)
-      commit('SET_ROUND_ACTIVE', { roundId: 1, isActive: true })
-      dispatch('runRound', state.currentRound)
+      state.isPaused = false
+      
+      // If resuming from pause, don't reset positions
+      if (!wasPaused) {
+        commit('SET_ROUND_ACTIVE', { roundId: state.currentRound, isActive: true })
+      }
+      
+      dispatch('runRound', { roundId: state.currentRound, wasPaused })
     },
     
-    runRound({ commit, state, dispatch }, roundId: number) {
+    runRound({ commit, state, dispatch }, params: { roundId: number, wasPaused?: boolean }) {
+      const { roundId, wasPaused = false } = params
       const round = state.rounds.find(r => r.id === roundId)
       if (!round) return
       
-      // Reset all horses to starting position at the beginning of each round
-      state.racingHorses.forEach(horse => {
-        horse.position = 0
-        horse.hasFinished = false
-        horse.finishPosition = undefined
-      })
-      
-      // Clear finished horses array
-      state.finishedHorses = []
+      // Only reset positions if this is a new round (not resuming from pause)
+      if (!wasPaused) {
+        // Reset all horses to starting position at the beginning of each round
+        state.racingHorses.forEach(horse => {
+          horse.position = 0
+          horse.hasFinished = false
+          horse.finishPosition = undefined
+        })
+        
+        // Clear finished horses array
+        state.finishedHorses = []
+      }
       
       commit('SET_ROUND_ACTIVE', { roundId, isActive: true })
       
-      // Simulate race progress
-      const raceInterval = setInterval(() => {
+      // Store interval ID in state
+      state.raceInterval = setInterval(() => {
         let allFinished = true
         
         state.racingHorses.forEach(horse => {
@@ -257,7 +282,8 @@ export default createStore({
         
         // Check if all horses finished
         if (allFinished) {
-          clearInterval(raceInterval)
+          clearInterval(state.raceInterval!)
+          state.raceInterval = null
           
           // Sort horses by position (winner first - highest position wins)
           const sortedResults = [...state.racingHorses].sort((a, b) => b.position - a.position)
@@ -285,7 +311,7 @@ export default createStore({
               commit('SET_CURRENT_ROUND', roundId + 1)
               // Select new horses for next round
               dispatch('selectHorsesForRound', roundId + 1)
-              dispatch('runRound', roundId + 1)
+              dispatch('runRound', { roundId: roundId + 1, wasPaused: false })
             }, 2000)
           } else {
             commit('SET_RACE_ACTIVE', false)
@@ -306,8 +332,14 @@ export default createStore({
       commit('SET_RACING_HORSES', roundHorses)
     },
     
-    pauseRace({ commit }) {
+    pauseRace({ commit, state }) {
       commit('SET_RACE_ACTIVE', false)
+      state.isPaused = true
+      // Clear any existing race interval
+      if (state.raceInterval) {
+        clearInterval(state.raceInterval)
+        state.raceInterval = null
+      }
     },
     
     resetRace({ commit }) {
