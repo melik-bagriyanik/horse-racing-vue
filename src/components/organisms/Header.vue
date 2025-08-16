@@ -25,6 +25,13 @@
         >
           {{ isRaceActive ? '⏸️ Pause' : '▶️ Start' }}
         </BaseButton>
+        <BaseButton
+          @click="resetEverything"
+          variant="danger"
+          class="control-btn reset-btn"
+        >
+          🔄 Reset All
+        </BaseButton>
       </div>
     </div>
   </header>
@@ -55,6 +62,10 @@ const toggleRace = () => {
   } else {
     store.dispatch('startRace')
   }
+}
+
+const resetEverything = () => {
+  store.dispatch('resetRace')
 }
 </script>
 
@@ -134,6 +145,17 @@ const toggleRace = () => {
 
 .start-btn:hover:not(:disabled) {
   background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.reset-btn {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  border: none;
+  color: white;
+  font-weight: 700;
+}
+
+.reset-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
 }
 
 /* Responsive Design */

@@ -176,6 +176,8 @@ const displayLanes = computed(() => {
 .horse-emoji {
   font-size: 24px;
   margin-right: 8px;
+  transform: scaleX(-1);
+  transform-origin: center;
 }
 
 .horse-in-lane .horse-name {
