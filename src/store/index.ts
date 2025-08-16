@@ -69,7 +69,7 @@ export default createStore({
       state.horses = []
       
       for (let i = 0; i < horseCount; i++) {
-        const randomCondition = Math.floor(Math.random() * 100) + 1
+        const randomCondition = Math.floor(Math.random() * 61) + 40 // 40-100 arası
         const randomNameIndex = Math.floor(Math.random() * horseNames.length)
         const randomColorIndex = Math.floor(Math.random() * colors.length)
         
