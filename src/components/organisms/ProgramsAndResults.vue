@@ -22,7 +22,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="results-panel">
       <h3>Results</h3>
       <div class="rounds-container">
@@ -67,7 +67,7 @@ export default {
       type: Array,
       default: () => [
         'Ada Lovelace',
-        'Grace Hopper', 
+        'Grace Hopper',
         'Margaret Hamilton',
         'Joan Clarke',
         'Katherine Johnson',
@@ -75,7 +75,7 @@ export default {
         'Mary Jackson',
         'Annie Easley',
         'Frances Spence',
-        'Betty Holberton'
+        'Betty Holberton',
       ],
     },
   },
@@ -84,51 +84,71 @@ export default {
       // Simple logic to assign horse names to positions
       const index = (position + roundId - 1) % this.horseNames.length
       return this.horseNames[index]
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style scoped>
+.program-panel,
+.results-panel {
+  position: relative;
+  overflow: hidden;
+}
+
+.program-panel h3,
+.results-panel h3 {
+  position: sticky;
+  top: 0;
+  background: rgb(218, 255, 95);
+  z-index: 10;
+  padding: 15px 15px 15px 15px;
+  margin: -15px -15px 15px -15px;
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  color: black;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+}
 .programs-and-results {
   display: flex;
-  gap: 20px;
-  width: 600px;
+  min-height: 650px;
+  height: 90vh;
+
+  overflow: auto;
+  width: 500px;
+  background-color: rgb(218, 255, 95);
 }
 
 .program-panel,
 .results-panel {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 15px;
+  padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.1);
   flex: 1;
-}
-
-.program-panel h3,
-.results-panel h3 {
-  color: #fff;
-  margin: 0 0 15px 0;
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center;
+  overflow-y: auto;
+  max-height: 100%;
 }
 
 .rounds-container {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  padding: 0 15px 15px 15px;
 }
 
 .round-section {
-  background: rgba(255, 255, 255, 0.03);
+  background: #ffec1d;
+  border-radius: 10px;
   border-radius: 6px;
   padding: 10px;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .round-section h4 {
-  color: #fff;
+  color: black;
   margin: 0 0 10px 0;
   font-size: 14px;
   font-weight: 600;
@@ -149,13 +169,13 @@ export default {
 }
 
 .round-table th {
-  color: #fff;
+  color: black;
   font-weight: 600;
   background: rgba(255, 255, 255, 0.05);
 }
 
 .round-table td {
-  color: #e0e0e0;
+  color: #515151;
 }
 
 .round-table tr:hover {

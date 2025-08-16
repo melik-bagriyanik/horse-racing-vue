@@ -7,13 +7,13 @@
         <span class="race-distance">{{ distance }}m</span>
       </div>
     </div>
-    
+
     <div class="race-lanes">
-      <div 
-        v-for="(lane, index) in displayLanes" 
-        :key="index" 
+      <div
+        v-for="(lane, index) in displayLanes"
+        :key="index"
         class="race-lane"
-        :class="{ 'active': lane.isActive }"
+        :class="{ active: lane.isActive }"
       >
         <div class="lane-number">{{ index + 1 }}</div>
         <div class="lane-content">
@@ -96,7 +96,7 @@ export default {
     displayLanes() {
       return this.lanes.length > 0 ? this.lanes : this.defaultLanes
     },
-  }
+  },
 }
 </script>
 
@@ -108,6 +108,8 @@ export default {
   margin: 20px 0;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   flex: 1;
+  height: 87vh;
+  overflow: auto;
 }
 
 .racefield-header {
@@ -144,7 +146,8 @@ export default {
 .race-lanes {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  justify-content: space-around;
+  height: 90%;
 }
 
 .race-lane {
@@ -154,7 +157,7 @@ export default {
   border-radius: 8px;
   padding: 12px;
   position: relative;
-  min-height: 60px;
+  height: 40px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
 }
@@ -223,17 +226,9 @@ export default {
   top: 0;
   bottom: 0;
   width: 4px;
-  background: repeating-linear-gradient(
-    45deg,
-    #fff,
-    #fff 4px,
-    transparent 4px,
-    transparent 8px
-  );
+  background: repeating-linear-gradient(45deg, #fff, #fff 4px, transparent 4px, transparent 8px);
   z-index: 1;
 }
-
-
 
 /* Responsive design */
 
@@ -241,28 +236,26 @@ export default {
   .racefield {
     padding: 15px;
   }
-  
+
   .racefield-header {
     flex-direction: column;
     gap: 10px;
     align-items: flex-start;
   }
-  
+
   .race-info {
     gap: 10px;
   }
-  
+
   .lane-number {
     width: 32px;
     height: 32px;
     font-size: 14px;
     margin-right: 10px;
   }
-  
+
   .horse-in-lane .horse-name {
     font-size: 10px;
   }
-  
-
 }
 </style>

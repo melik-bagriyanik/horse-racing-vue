@@ -25,5 +25,8 @@ export default {
 </script>
 
 <style scoped>
-/* This component inherits styles from the parent App component */
+.panel {
+  width: 200px;
+  padding: 20px;
+}
 </style>
