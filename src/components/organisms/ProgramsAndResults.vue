@@ -90,14 +90,14 @@ const getProgramHorseNameForPosition = (position: number, roundId: number) => {
   position: relative;
   overflow: hidden;
 
-  background: rgb(46, 46, 46);
+  background: #264d29;
 }
 
 .program-panel h3,
 .results-panel h3 {
   position: sticky;
   top: 0;
-  background: rgb(46, 46, 46);
+  background: #264d29;
   z-index: 10;
   padding: 15px 15px 15px 15px;
   margin: -15px -15px 15px -15px;
@@ -136,7 +136,7 @@ const getProgramHorseNameForPosition = (position: number, roundId: number) => {
 }
 
 .round-section {
-  background: rgb(46, 46, 46);
+  background: #264d29;
   border-radius: 10px;
   border-radius: 6px;
   padding: 10px;

@@ -3,7 +3,10 @@
     <div class="container">
       <div class="logo-section">
         <h1 class="logo">🏇 Horse Racing</h1>
-        <p class="subtitle">Professional Racing Simulator</p>
+        <p class="subtitle">
+          Developed by
+          <a href="https://github.com/melik-bagriyanik" target="_blank">Melik Bağrıyanık</a>
+        </p>
       </div>
 
       <div class="controls">
@@ -25,11 +28,7 @@
         >
           {{ isRaceActive ? '⏸️ Pause' : '▶️ Start' }}
         </BaseButton>
-        <BaseButton
-          @click="resetEverything"
-          variant="danger"
-          class="control-btn reset-btn"
-        >
+        <BaseButton @click="resetEverything" variant="danger" class="control-btn reset-btn">
           🔄 Reset All
         </BaseButton>
       </div>
@@ -101,7 +100,7 @@ const resetEverything = () => {
 .logo {
   font-size: 1.8rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(90deg, rgba(68, 201, 104, 1) 0%, rgba(38, 77, 41, 1) 50%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

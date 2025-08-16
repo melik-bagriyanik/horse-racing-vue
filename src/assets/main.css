@@ -142,7 +142,12 @@ td {
 }
 
 th {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(42, 123, 155, 1) 0%,
+    rgba(38, 77, 41, 1) 50%,
+    rgba(237, 221, 83, 1) 100%
+  );
   color: white;
   font-weight: 600;
 }

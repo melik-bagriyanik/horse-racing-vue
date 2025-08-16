@@ -23,4 +23,8 @@ const horses = computed(() => store.state.horses.horses)
   padding: 20px;
   overflow-y: auto;
 }
+.panel-header {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 </style>
