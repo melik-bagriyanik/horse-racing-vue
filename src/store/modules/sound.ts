@@ -6,13 +6,18 @@ const isSoundEnabled = (): boolean => {
 
 // Gallop sesi için global değişkenler
 let gallopAudio: HTMLAudioElement | null = null
+let audioContext: AudioContext | null = null
 
 // Ses çalma fonksiyonu
 const playSound = (frequencies: number[], duration: number, type: OscillatorType = 'sine') => {
   if (!isSoundEnabled()) return
 
   try {
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+    // Mevcut audio context'i kullan veya yeni oluştur
+    if (!audioContext) {
+      audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+    }
+    
     const oscillator = audioContext.createOscillator()
     const gainNode = audioContext.createGain()
 
@@ -20,19 +25,19 @@ const playSound = (frequencies: number[], duration: number, type: OscillatorType
 
     // Frekansları ayarla
     frequencies.forEach((freq, index) => {
-      const time = audioContext.currentTime + index * 0.1
+      const time = audioContext!.currentTime + index * 0.1
       oscillator.frequency.setValueAtTime(freq, time)
     })
 
     // Ses seviyesi
-    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime)
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration)
+    gainNode.gain.setValueAtTime(0.2, audioContext!.currentTime)
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext!.currentTime + duration)
 
     oscillator.connect(gainNode)
-    gainNode.connect(audioContext.destination)
+    gainNode.connect(audioContext!.destination)
 
-    oscillator.start(audioContext.currentTime)
-    oscillator.stop(audioContext.currentTime + duration)
+    oscillator.start(audioContext!.currentTime)
+    oscillator.stop(audioContext!.currentTime + duration)
   } catch (error) {
     console.log('Ses çalınamadı:', error)
   }
@@ -43,7 +48,7 @@ export const startGallopSound = () => {
   if (!isSoundEnabled() || gallopAudio) return
 
   try {
-    gallopAudio = new Audio('/gallop.mp3')
+    gallopAudio = new Audio('./gallop.mp3')
     gallopAudio.volume = 0.3
     gallopAudio.loop = true
 
@@ -61,6 +66,18 @@ export const stopGallopSound = () => {
     gallopAudio.pause()
     gallopAudio.currentTime = 0
     gallopAudio = null
+  }
+}
+
+// Tüm sesleri durdur (race bitiminde kullanılır)
+export const stopAllSounds = () => {
+  // Gallop sesini durdur
+  stopGallopSound()
+  
+  // Audio context'i temizle
+  if (audioContext) {
+    audioContext.close()
+    audioContext = null
   }
 }
 

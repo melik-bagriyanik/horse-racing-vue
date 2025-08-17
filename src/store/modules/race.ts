@@ -1,5 +1,5 @@
 import type { Horse, Round } from '../types'
-import { playRoundStartSound, playHorseFinishSound, startGallopSound, stopGallopSound } from './sound'
+import { playRoundStartSound, playHorseFinishSound, startGallopSound, stopGallopSound, stopAllSounds } from './sound'
 
 // Sabitler - Yarış simülasyonu için gerekli sabit değerler
 const ROUNDS_CONFIG = [
@@ -88,8 +88,8 @@ const mutations = {
       round.winner = undefined
     })
 
-    // Gallop sesini durdur
-    stopGallopSound()
+    // Tüm sesleri durdur
+    stopAllSounds()
   },
 }
 
@@ -235,8 +235,8 @@ const actions = {
           }, ROUND_DELAY) // 2 saniye bekle
         } else {
           commit('SET_RACE_ACTIVE', false) // Tüm turlar bitti
-          // Gallop sesini durdur
-          stopGallopSound()
+          // Tüm sesleri durdur
+          stopAllSounds()
         }
       }
     }, RACE_UPDATE_INTERVAL) // Her 100ms'de bir güncelle
@@ -259,16 +259,16 @@ const actions = {
       clearInterval(state.raceInterval)
       state.raceInterval = null
     }
-    // Gallop sesini durdur
-    stopGallopSound()
+    // Tüm sesleri durdur
+    stopAllSounds()
   },
 
   // Yarışı sıfırlar
   resetRace({ commit }: any) {
     commit('RESET_RACE')
     commit('horses/RESET_HORSES', null, { root: true })
-    // Gallop sesini durdur
-    stopGallopSound()
+    // Tüm sesleri durdur
+    stopAllSounds()
   },
 }
 
