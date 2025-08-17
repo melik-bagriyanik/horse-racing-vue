@@ -14,6 +14,7 @@
         <div class="lane-content">
           <div v-if="lane.horse" class="horse-in-lane" :style="{ left: lane.horse.position + '%' }">
             <span class="horse-emoji">🐎</span>
+            <span class="horse-color-ball" :style="{ backgroundColor: lane.horse.color }"></span>
             <span class="horse-name">{{ lane.horse.name }}</span>
           </div>
         </div>
@@ -34,17 +35,6 @@ interface Lane {
 }
 
 const store = useStore()
-
-const props = defineProps({
-  raceNumber: {
-    type: Number,
-    default: 1,
-  },
-  distance: {
-    type: Number,
-    default: 1200,
-  },
-})
 
 const racingHorses = computed(() => store.getters.racingHorses)
 const currentRound = computed(() => store.getters.currentRound)
@@ -78,7 +68,6 @@ const displayLanes = computed((): Lane[] => {
   flex: 1;
   height: 100%;
 }
-
 .racefield-header {
   display: flex;
   justify-content: space-between;
@@ -176,14 +165,14 @@ const displayLanes = computed((): Lane[] => {
 
 .horse-emoji {
   font-size: 24px;
-  margin-right: 8px;
+  margin-right: 3px;
   transform: scaleX(-1);
   transform-origin: center;
 }
 
 .horse-in-lane .horse-name {
   color: white;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 12px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
   white-space: nowrap;
@@ -197,6 +186,17 @@ const displayLanes = computed((): Lane[] => {
   width: 4px;
   background: repeating-linear-gradient(45deg, #fff, #fff 4px, transparent 4px, transparent 8px);
   z-index: 1;
+}
+
+.horse-color-ball {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+
+  border: 1px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  vertical-align: middle;
 }
 
 /* Responsive design */

@@ -133,6 +133,7 @@ const getProgramHorseNameForPosition = (position: number, roundId: number) => {
   flex-direction: column;
   gap: 15px;
   padding: 0 15px 15px 15px;
+  margin-bottom: 30px;
 }
 
 .round-section {
