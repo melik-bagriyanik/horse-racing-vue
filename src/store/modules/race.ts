@@ -1,6 +1,6 @@
 import type { Horse, Round } from '../types'
 
-// Constants
+// Sabitler - Yarış simülasyonu için gerekli sabit değerler
 const ROUNDS_CONFIG = [
   { id: 1, distance: 1200 },
   { id: 2, distance: 1400 },
@@ -10,45 +10,49 @@ const ROUNDS_CONFIG = [
   { id: 6, distance: 2200 },
 ] as const
 
-const HORSES_PER_ROUND = 10
-const RACE_UPDATE_INTERVAL = 100 // ms
-const ROUND_DELAY = 2000 // ms
+const HORSES_PER_ROUND = 10 // Her turda yarışacak at sayısı
+const RACE_UPDATE_INTERVAL = 100 // Yarış animasyonu güncelleme sıklığı (ms)
+const ROUND_DELAY = 2000 // Turlar arası bekleme süresi (ms)
 
-// State
+// State - Yarış modülünün durum bilgileri
 const state = {
-  rounds: ROUNDS_CONFIG.map(config => ({
+  rounds: ROUNDS_CONFIG.map((config) => ({
     ...config,
-    isActive: false,
-    results: [] as Horse[],
-    winner: undefined as Horse | undefined
+    isActive: false, // Tur aktif mi?
+    results: [] as Horse[], // Tur sonuçları
+    winner: undefined as Horse | undefined, // Tur kazananı
   })) as Round[],
-  roundPrograms: {} as { [roundId: number]: Horse[] },
-  currentRound: 1,
-  isRaceActive: false,
-  raceResults: {} as { [roundId: number]: Horse[] },
-  raceInterval: null as number | null,
-  isPaused: false,
+  roundPrograms: {} as { [roundId: number]: Horse[] }, // Her tur için seçilen atlar
+  currentRound: 1, // Şu anki aktif tur
+  isRaceActive: false, // Yarış aktif mi?
+  raceResults: {} as { [roundId: number]: Horse[] }, // Tüm tur sonuçları
+  raceInterval: null as number | null, // Yarış animasyonu için interval ID
+  isPaused: false, // Yarış duraklatıldı mı?
 }
 
-// Mutations
+// Mutations - State değişikliklerini yapan fonksiyonlar
 const mutations = {
+  // Yarış durumunu günceller (başlat/durdur)
   SET_RACE_ACTIVE(state: any, isActive: boolean) {
     state.isRaceActive = isActive
   },
 
+  // Aktif turu değiştirir
   SET_CURRENT_ROUND(state: any, round: number) {
     state.currentRound = round
   },
 
+  // Belirli bir turun sonuçlarını kaydeder
   SET_ROUND_RESULTS(state: any, { roundId, results }: { roundId: number; results: Horse[] }) {
     state.raceResults[roundId] = results
     const round = state.rounds.find((r: Round) => r.id === roundId)
     if (round) {
       round.results = results
-      round.winner = results[0]
+      round.winner = results[0] // İlk at kazanan
     }
   },
 
+  // Tur durumunu günceller (aktif/pasif)
   SET_ROUND_ACTIVE(state: any, { roundId, isActive }: { roundId: number; isActive: boolean }) {
     const round = state.rounds.find((r: Round) => r.id === roundId)
     if (round) {
@@ -56,22 +60,27 @@ const mutations = {
     }
   },
 
+  // Tur programını kaydeder (hangi atlar hangi turda yarışacak)
   SET_ROUND_PROGRAM(state: any, { roundId, horses }: { roundId: number; horses: Horse[] }) {
     state.roundPrograms[roundId] = horses
   },
 
+  // Tüm yarış verilerini sıfırlar (reset işlemi için)
   RESET_RACE(state: any) {
+    // Aktif interval varsa temizle
     if (state.raceInterval) {
       clearInterval(state.raceInterval)
       state.raceInterval = null
     }
 
+    // Tüm yarış verilerini sıfırla
     state.isRaceActive = false
     state.isPaused = false
     state.currentRound = 1
     state.raceResults = {}
     state.roundPrograms = {}
-    
+
+    // Tüm turları sıfırla
     state.rounds.forEach((round: Round) => {
       round.isActive = false
       round.results = []
@@ -80,38 +89,42 @@ const mutations = {
   },
 }
 
-// Helper functions
+// Yardımcı fonksiyonlar - Karmaşık işlemleri basitleştiren fonksiyonlar
 const selectRandomHorses = (availableHorses: Horse[], count: number): Horse[] => {
-  const horses = [...availableHorses]
+  const horses = [...availableHorses] // Mevcut atların kopyasını al
   const selected: Horse[] = []
-  
+
+  // Belirtilen sayıda rastgele at seç
   for (let i = 0; i < count; i++) {
     const randomIndex = Math.floor(Math.random() * horses.length)
-    const horse = { ...horses[randomIndex] }
-    horse.isRacing = true
-    horse.position = 0
+    const horse = { ...horses[randomIndex] } // Atın kopyasını al
+    horse.isRacing = true // Yarışa katılıyor olarak işaretle
+    horse.position = 0 // Başlangıç pozisyonu
     selected.push(horse)
-    horses.splice(randomIndex, 1)
+    horses.splice(randomIndex, 1) // Seçilen atı listeden çıkar
   }
-  
+
+  // Atları alfabetik sıraya koy (program tablosu için)
   return selected.sort((a, b) => a.name.localeCompare(b.name))
 }
 
 const calculateHorseSpeed = (horse: Horse): number => {
-  const baseSpeed = (horse.condition / 100) * 1.5
-  const randomFactor = 0.5 + Math.random() * 1.0
+  // Atın hızını hesapla (kondisyon + rastgele faktör)
+  const baseSpeed = (horse.condition / 100) * 1.5 // Kondisyona göre temel hız
+  const randomFactor = 0.5 + Math.random() * 1.0 // Rastgele faktör (0.5-1.5)
   return baseSpeed * randomFactor
 }
 
-// Actions
+// Actions - Yarışı başlatma, durdurma, tur geçişi gibi işlemleri yöneten fonksiyonlar
 const actions = {
+  // Yarış programını oluşturur (her tur için rastgele atlar seçer)
   generateProgram({ commit, rootState }: any) {
     commit('RESET_RACE')
 
     for (let roundId = 1; roundId <= 6; roundId++) {
       const availableHorses = [...rootState.horses.horses]
       const selectedHorses = selectRandomHorses(availableHorses, HORSES_PER_ROUND)
-      
+
       selectedHorses.forEach((horse, index) => {
         horse.lane = index + 1
       })
@@ -124,6 +137,7 @@ const actions = {
     commit('SET_RACE_ACTIVE', false)
   },
 
+  // Yarışı başlatır
   startRace({ commit, state, dispatch, rootState }: any) {
     if (rootState.horses.racingHorses.length === 0) return
 
@@ -138,54 +152,66 @@ const actions = {
     dispatch('runRound', { roundId: state.currentRound, wasPaused })
   },
 
-  runRound({ commit, state, dispatch, rootState }: any, params: { roundId: number; wasPaused?: boolean }) {
+  // Belirtilen turu çalıştırır (yarış animasyonu ve sonuç hesaplama)
+  runRound(
+    { commit, state, dispatch, rootState }: any,
+    params: { roundId: number; wasPaused?: boolean },
+  ) {
     const { roundId, wasPaused = false } = params
     const round = state.rounds.find((r: Round) => r.id === roundId)
     if (!round) return
 
+    // Eğer yeni tur başlıyorsa (duraklatılmıştan devam etmiyorsa) atları sıfırla
     if (!wasPaused) {
       const racingHorses = rootState.horses.racingHorses
       racingHorses.forEach((horse: Horse) => {
-        horse.position = 0
-        horse.hasFinished = false
-        horse.finishPosition = undefined
+        horse.position = 0 // Başlangıç pozisyonu
+        horse.hasFinished = false // Yarışı bitirmemiş
+        horse.finishPosition = undefined // Bitiş pozisyonu yok
       })
-      rootState.horses.finishedHorses = []
+      rootState.horses.finishedHorses = [] // Bitiren atlar listesini temizle
     }
 
     commit('SET_ROUND_ACTIVE', { roundId, isActive: true })
 
+    // Yarış animasyonu için interval başlat
     state.raceInterval = setInterval(() => {
       let allFinished = true
 
+      // Her atı hareket ettir
       rootState.horses.racingHorses.forEach((horse: Horse) => {
         if (horse.position < 100) {
-          const speed = calculateHorseSpeed(horse)
-          horse.position = Math.min(100, horse.position + speed)
+          // Henüz bitiş çizgisini geçmemiş
+          const speed = calculateHorseSpeed(horse) // Atın hızını hesapla
+          horse.position = Math.min(100, horse.position + speed) // Pozisyonu güncelle
 
+          // At bitiş çizgisini geçti mi?
           if (horse.position >= 100 && !horse.hasFinished) {
-            horse.hasFinished = true
-            horse.finishPosition = rootState.horses.finishedHorses.length + 1
-            rootState.horses.finishedHorses.push(horse)
+            horse.hasFinished = true // Yarışı bitirdi
+            horse.finishPosition = rootState.horses.finishedHorses.length + 1 // Bitiş sırası
+            rootState.horses.finishedHorses.push(horse) // Bitiren atlar listesine ekle
 
+            // Sonuçları gerçek zamanlı güncelle
             const currentResults = [...rootState.horses.finishedHorses].sort(
-              (a, b) => (a.finishPosition || 0) - (b.finishPosition || 0)
+              (a, b) => (a.finishPosition || 0) - (b.finishPosition || 0),
             )
             commit('SET_ROUND_RESULTS', { roundId, results: currentResults })
           }
 
           if (horse.position < 100) {
-            allFinished = false
+            allFinished = false // Hala bitirmeyen at var
           }
         }
       })
 
+      // Tüm atlar bitti mi?
       if (allFinished) {
-        clearInterval(state.raceInterval!)
+        clearInterval(state.raceInterval!) // Interval'ı durdur
         state.raceInterval = null
 
+        // Final sonuçları hesapla
         const sortedResults = [...rootState.horses.racingHorses].sort(
-          (a, b) => b.position - a.position
+          (a, b) => b.position - a.position, // Pozisyona göre sırala
         )
         const resultsCopy = sortedResults.map((horse) => ({
           id: horse.id,
@@ -200,19 +226,21 @@ const actions = {
         commit('SET_ROUND_RESULTS', { roundId, results: resultsCopy })
         commit('SET_ROUND_ACTIVE', { roundId, isActive: false })
 
+        // Sonraki tura geç veya yarışı bitir
         if (roundId < 6) {
           setTimeout(() => {
-            commit('SET_CURRENT_ROUND', roundId + 1)
-            dispatch('selectHorsesForRound', roundId + 1)
-            dispatch('runRound', { roundId: roundId + 1, wasPaused: false })
-          }, ROUND_DELAY)
+            commit('SET_CURRENT_ROUND', roundId + 1) // Sonraki turu aktif et
+            dispatch('selectHorsesForRound', roundId + 1) // Sonraki turun atlarını seç
+            dispatch('runRound', { roundId: roundId + 1, wasPaused: false }) // Sonraki turu başlat
+          }, ROUND_DELAY) // 2 saniye bekle
         } else {
-          commit('SET_RACE_ACTIVE', false)
+          commit('SET_RACE_ACTIVE', false) // Tüm turlar bitti
         }
       }
-    }, RACE_UPDATE_INTERVAL)
+    }, RACE_UPDATE_INTERVAL) // Her 100ms'de bir güncelle
   },
 
+  // Belirtilen tur için atları seçer ve yarışa hazırlar
   selectHorsesForRound({ commit, state }: any, roundId: number) {
     const roundHorses = state.roundPrograms[roundId] || []
     roundHorses.forEach((horse: Horse) => {
@@ -221,6 +249,7 @@ const actions = {
     commit('horses/SET_RACING_HORSES', roundHorses, { root: true })
   },
 
+  // Yarışı duraklatır
   pauseRace({ commit, state }: any) {
     commit('SET_RACE_ACTIVE', false)
     state.isPaused = true
@@ -230,25 +259,27 @@ const actions = {
     }
   },
 
+  // Yarışı sıfırlar
   resetRace({ commit }: any) {
     commit('RESET_RACE')
     commit('horses/RESET_HORSES', null, { root: true })
   },
 }
 
-// Getters
+// Getters - Yarış durumunu ve sonuçları kontrol etmek için kullanılan fonksiyonlar
 const getters = {
-  isRaceActive: (state: any) => state.isRaceActive,
-  currentRound: (state: any) => state.currentRound,
-  roundResults: (state: any) => (roundId: number) => state.raceResults[roundId] || [],
-  allRoundResults: (state: any) => ({ ...state.raceResults }),
-  activeRound: (state: any) => state.rounds.find((r: Round) => r.isActive),
+  isRaceActive: (state: any) => state.isRaceActive, // Yarış aktif mi? (true/false)
+  currentRound: (state: any) => state.currentRound, // Şu anki aktif tur (1-6)
+  roundResults: (state: any) => (roundId: number) => state.raceResults[roundId] || [], // Belirli turun sonuçları
+  allRoundResults: (state: any) => ({ ...state.raceResults }), // Tüm tur sonuçları (kopya)
+  activeRound: (state: any) => state.rounds.find((r: Round) => r.isActive), // Aktif tur bilgisi
 }
 
+// Race modülünü export et - Vuex store'a dahil edilecek
 export default {
-  namespaced: true,
-  state,
-  mutations,
-  actions,
-  getters,
+  namespaced: true, // Modül ad alanı kullan (race/action şeklinde çağrılır)
+  state, // State tanımları
+  mutations, // State değişiklikleri
+  actions, // Karmaşık işlemler
+  getters, // Hesaplanmış değerler
 }
