@@ -24,21 +24,21 @@ describe('HorseConditionBar Unit Testleri', () => {
     const highConditionHorse = { ...testHorse, condition: 90 }
     const wrapper = mount(HorseConditionBar, { props: { horse: highConditionHorse } })
     const conditionBar = wrapper.find('.condition-bar')
-    expect(conditionBar.attributes('style')).toContain('#10b981')
+    expect(conditionBar.attributes('style')).toContain('rgb(16, 185, 129)')
   })
 
   it('orta kondisyon için turuncu renk kullanmalı', () => {
     const mediumConditionHorse = { ...testHorse, condition: 70 }
     const wrapper = mount(HorseConditionBar, { props: { horse: mediumConditionHorse } })
     const conditionBar = wrapper.find('.condition-bar')
-    expect(conditionBar.attributes('style')).toContain('#f59e0b')
+    expect(conditionBar.attributes('style')).toContain('rgb(245, 158, 11)')
   })
 
   it('düşük kondisyon için kırmızı renk kullanmalı', () => {
     const lowConditionHorse = { ...testHorse, condition: 30 }
     const wrapper = mount(HorseConditionBar, { props: { horse: lowConditionHorse } })
     const conditionBar = wrapper.find('.condition-bar')
-    expect(conditionBar.attributes('style')).toContain('#ef4444')
+    expect(conditionBar.attributes('style')).toContain('rgb(239, 68, 68)')
   })
 
   it('component doğru prop ile render olmalı', () => {

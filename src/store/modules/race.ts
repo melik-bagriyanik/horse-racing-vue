@@ -209,21 +209,8 @@ const actions = {
         clearInterval(state.raceInterval!) // Interval'ı durdur
         state.raceInterval = null
 
-        // Final sonuçları hesapla
-        const sortedResults = [...rootState.horses.racingHorses].sort(
-          (a, b) => b.position - a.position, // Pozisyona göre sırala
-        )
-        const resultsCopy = sortedResults.map((horse) => ({
-          id: horse.id,
-          name: horse.name,
-          condition: horse.condition,
-          color: horse.color,
-          position: horse.position,
-          isRacing: horse.isRacing,
-          lane: horse.lane,
-        }))
-
-        commit('SET_ROUND_RESULTS', { roundId, results: resultsCopy })
+        // Final sonuçları zaten finishedHorses array'inde doğru sırada
+        // Ek bir sıralama yapmaya gerek yok
         commit('SET_ROUND_ACTIVE', { roundId, isActive: false })
 
         // Sonraki tura geç veya yarışı bitir
