@@ -9,6 +9,7 @@ Professional Horse Racing Simulator built with Vue 3, Vuex, and TypeScript.
 - **Realtime Race Simulation** with animated horse movement
 - **Program Generation** - Random horse selection for each round
 - **Live Results** - Real-time race results as horses finish
+- **Race Sounds** - start,finish and gallop sounds
 - **Pause/Resume** functionality
 - **Reset** capability
 - **Responsive Design** for mobile and tablet
