@@ -31,21 +31,29 @@
         <BaseButton @click="resetEverything" variant="danger" class="control-btn reset-btn">
           🔄 Reset All
         </BaseButton>
+        <BaseButton @click="toggleSound" :variant="isSoundEnabled ? 'success' : 'secondary'" class="control-btn sound-btn">
+          {{ isSoundEnabled ? '🔊 Sound On' : '🔇 Sound Off' }}
+        </BaseButton>
       </div>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import BaseButton from '../atoms/BaseButton.vue'
+import { stopGallopSound, startGallopSound } from '../../store/modules/sound'
 
 const store = useStore()
 
 const horses = computed(() => store.state.horses.horses)
 const racingHorses = computed(() => store.getters.racingHorses)
 const isRaceActive = computed(() => store.getters.isRaceActive)
+
+// Ses kontrolü için reactive state
+const saved = localStorage.getItem('horseRacingSoundEnabled')
+const isSoundEnabled = ref(saved === null ? true : saved === 'true')
 
 const generateHorseList = () => {
   store.dispatch('horses/generateHorseList')
@@ -65,6 +73,20 @@ const toggleRace = () => {
 
 const resetEverything = () => {
   store.dispatch('race/resetRace')
+}
+
+const toggleSound = () => {
+  isSoundEnabled.value = !isSoundEnabled.value
+  // Ses durumunu localStorage'a kaydet
+  localStorage.setItem('horseRacingSoundEnabled', isSoundEnabled.value.toString())
+  
+  if (!isSoundEnabled.value) {
+    // Eğer ses kapatıldıysa gallop sesini durdur
+    stopGallopSound()
+  } else if (isRaceActive.value) {
+    // Eğer ses açıldıysa ve yarış aktifse gallop sesini başlat
+    startGallopSound()
+  }
 }
 </script>
 

@@ -1,4 +1,5 @@
 import type { Horse, Round } from '../types'
+import { playRoundStartSound, playHorseFinishSound, startGallopSound, stopGallopSound } from './sound'
 
 // Sabitler - Yarış simülasyonu için gerekli sabit değerler
 const ROUNDS_CONFIG = [
@@ -86,6 +87,9 @@ const mutations = {
       round.results = []
       round.winner = undefined
     })
+
+    // Gallop sesini durdur
+    stopGallopSound()
   },
 }
 
@@ -148,6 +152,9 @@ const actions = {
     if (!wasPaused) {
       commit('SET_ROUND_ACTIVE', { roundId: state.currentRound, isActive: true })
     }
+    
+    // Gallop sesini başlat (hem yeni yarış hem de duraklatılmış yarıştan devam için)
+    startGallopSound()
 
     dispatch('runRound', { roundId: state.currentRound, wasPaused })
   },
@@ -170,6 +177,9 @@ const actions = {
         horse.finishPosition = undefined // Bitiş pozisyonu yok
       })
       rootState.horses.finishedHorses = [] // Bitiren atlar listesini temizle
+
+      // Round başlama sesi çal
+      playRoundStartSound()
     }
 
     commit('SET_ROUND_ACTIVE', { roundId, isActive: true })
@@ -190,6 +200,9 @@ const actions = {
             horse.hasFinished = true // Yarışı bitirdi
             horse.finishPosition = rootState.horses.finishedHorses.length + 1 // Bitiş sırası
             rootState.horses.finishedHorses.push(horse) // Bitiren atlar listesine ekle
+
+            // At bitiş sesi çal
+            playHorseFinishSound()
 
             // Sonuçları gerçek zamanlı güncelle
             const currentResults = [...rootState.horses.finishedHorses].sort(
@@ -222,6 +235,8 @@ const actions = {
           }, ROUND_DELAY) // 2 saniye bekle
         } else {
           commit('SET_RACE_ACTIVE', false) // Tüm turlar bitti
+          // Gallop sesini durdur
+          stopGallopSound()
         }
       }
     }, RACE_UPDATE_INTERVAL) // Her 100ms'de bir güncelle
@@ -244,12 +259,16 @@ const actions = {
       clearInterval(state.raceInterval)
       state.raceInterval = null
     }
+    // Gallop sesini durdur
+    stopGallopSound()
   },
 
   // Yarışı sıfırlar
   resetRace({ commit }: any) {
     commit('RESET_RACE')
     commit('horses/RESET_HORSES', null, { root: true })
+    // Gallop sesini durdur
+    stopGallopSound()
   },
 }
 
