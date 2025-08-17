@@ -1,7 +1,7 @@
 import { createStore, Store } from 'vuex'
 import type { State } from './types'
-import horses from './modules/horses'
-import race from './modules/race'
+import horses from './modules/horses/index'
+import race from './modules/race/index'
 
 const store: Store<State> = createStore({
   modules: {

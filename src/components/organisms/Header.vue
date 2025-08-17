@@ -64,6 +64,12 @@ const generateProgram = () => {
 }
 
 const toggleRace = () => {
+  console.log('Toggle race clicked:', {
+    isRaceActive: isRaceActive.value,
+    racingHorses: racingHorses.value,
+    racingHorsesLength: racingHorses.value?.length
+  })
+  
   if (isRaceActive.value) {
     store.dispatch('race/pauseRace')
   } else {

@@ -1,0 +1,61 @@
+// At isimleri listesi
+export const HORSE_NAMES = [
+  'Secretariat',
+  'Seabiscuit',
+  "Man o' War",
+  'Red Rum',
+  'Black Caviar',
+  'Frankel',
+  'American Pharoah',
+  'War Admiral',
+  'Affirmed',
+  'Citation',
+  'Whirlaway',
+  'Gallant Fox',
+  'Arkle',
+  'Phar Lap',
+  'Desert Orchid',
+  'Northern Dancer',
+  'Ribot',
+  'Sir Barton',
+  'Sunday Silence',
+  'Alysheba',
+  'Kelso',
+  'Spectacular Bid',
+  'Nijinsky',
+  'Big Brown',
+  'Smarty Jones',
+  'Justify',
+  'Zenyatta',
+  'Rachel Alexandra',
+  'Silver Charm',
+  'Thunder Gulch',
+]
+
+// At renkleri listesi
+export const HORSE_COLORS = [
+  'Red',
+  'Blue',
+  'Yellow',
+  'Green',
+  'Purple',
+  'Orange',
+  'Pink',
+  'Brown',
+  'Black',
+  'White',
+  'Gray',
+  'Cyan',
+  'Magenta',
+  'Lime',
+  'Navy',
+  'Teal',
+  'Maroon',
+  'Olive',
+  'Silver',
+  'Gold',
+]
+
+export const HORSE_COUNT = 20
+export const MIN_CONDITION = 40
+export const MAX_CONDITION = 100
