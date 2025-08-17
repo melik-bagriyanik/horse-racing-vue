@@ -14,6 +14,8 @@
     "prepare": "cypress install",
     "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
+    "test:quick": "cypress run --spec 'cypress/e2e/quick-tests.cy.ts'",
+    "test:full": "cypress run --spec 'cypress/e2e/horse-racing.cy.ts'",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "format": "prettier --write src/"
