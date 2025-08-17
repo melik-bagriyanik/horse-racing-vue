@@ -8,17 +8,14 @@ import Racefield from './components/organisms/Racefield.vue'
 <template>
   <div class="app">
     <Header />
-
     <main class="main-content">
       <div class="content-grid">
         <section class="horses-section">
           <HorsesList />
         </section>
-
         <section class="race-section">
           <Racefield />
         </section>
-
         <section class="programs-section">
           <ProgramsAndResults />
         </section>
@@ -36,7 +33,6 @@ import Racefield from './components/organisms/Racefield.vue'
 
 .main-content {
   padding: 1rem 2rem;
-
   margin: 0 auto;
 }
 
@@ -47,30 +43,23 @@ import Racefield from './components/organisms/Racefield.vue'
   height: calc(100vh - 120px);
 }
 
-.horses-section {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 16px;
-  box-shadow: 0px 0px 18px 10px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  overflow-y: auto;
-}
-
-.race-section {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  overflow: hidden;
-}
-
+/* Common section styles */
+.horses-section,
+.race-section,
 .programs-section {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.horses-section {
+  overflow-y: auto;
+}
+
+.race-section,
+.programs-section {
   overflow: hidden;
 }
 

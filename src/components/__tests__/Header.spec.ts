@@ -43,7 +43,7 @@ describe('Header Unit Testleri', () => {
       }
     })
     
-    expect(wrapper.text()).toContain('Professional Racing Simulator')
+    expect(wrapper.text()).toContain('Developed by')
   })
 
   it('tüm butonlar mevcut olmalı', () => {

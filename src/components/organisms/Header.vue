@@ -24,7 +24,7 @@
           @click="toggleRace"
           variant="secondary"
           class="control-btn start-btn"
-          :disabled="racingHorses.length === 0"
+          :disabled="!racingHorses || racingHorses.length === 0"
         >
           {{ isRaceActive ? '⏸️ Pause' : '▶️ Start' }}
         </BaseButton>

@@ -4,37 +4,32 @@
   </button>
 </template>
 
-<script>
-export default {
-  name: 'BaseButton',
-  props: {
-    variant: {
-      type: String,
-      default: 'primary',
-      validator: (value) =>
-        ['primary', 'secondary', 'success', 'warning', 'danger'].includes(value),
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    size: {
-      type: String,
-      default: 'medium',
-      validator: (value) => ['small', 'medium', 'large'].includes(value),
-    },
-  },
-  computed: {
-    buttonClasses() {
-      const classes = ['btn', `btn-${this.variant}`, `btn-${this.size}`]
-      if (this.disabled) {
-        classes.push('disabled')
-      }
-      return classes
-    },
-  },
-  emits: ['click'],
+<script setup lang="ts">
+import { computed } from 'vue'
+
+interface Props {
+  variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  disabled?: boolean
+  size?: 'small' | 'medium' | 'large'
 }
+
+const props = withDefaults(defineProps<Props>(), {
+  variant: 'primary',
+  disabled: false,
+  size: 'medium'
+})
+
+defineEmits<{
+  click: []
+}>()
+
+const buttonClasses = computed(() => {
+  const classes = ['btn', `btn-${props.variant}`, `btn-${props.size}`]
+  if (props.disabled) {
+    classes.push('disabled')
+  }
+  return classes
+})
 </script>
 
 <style scoped>
@@ -77,6 +72,7 @@ export default {
   min-width: 160px;
 }
 
+/* Shimmer effect */
 .btn::before {
   content: '';
   position: absolute;
@@ -92,6 +88,7 @@ export default {
   left: 100%;
 }
 
+/* Hover and active states */
 .btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
@@ -103,6 +100,7 @@ export default {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Button variants */
 .btn-primary {
   background: linear-gradient(90deg, rgba(68, 201, 104, 1) 0%, rgba(38, 77, 41, 1) 50%);
   color: white;
@@ -110,7 +108,6 @@ export default {
 
 .btn-primary:hover:not(:disabled) {
   background: linear-gradient(90deg, rgb(27, 115, 50) 0%, rgb(72, 162, 79) 50%);
-  color: white;
 }
 
 .btn-secondary {
@@ -149,6 +146,7 @@ export default {
   background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
 }
 
+/* Disabled state */
 .btn:disabled,
 .btn.disabled {
   opacity: 0.6;
